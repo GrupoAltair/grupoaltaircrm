@@ -1,8 +1,8 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-// 1) PON AQUÍ TUS DATOS DE SUPABASE
-const SUPABASE_URL = "PEGA_AQUI_TU_PROJECT_URL";
-const SUPABASE_ANON_KEY = "PEGA_AQUI_TU_ANON_PUBLIC_KEY";
+// 1) TUS DATOS DE SUPABASE (YA PUESTOS)
+const SUPABASE_URL = "https://dzhhcjjcecqqqiqrkpnd.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_v6RCrB2SVZF0FhBNTMQo-w_wfy3Jlwl";
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -129,7 +129,6 @@ async function loadClientes(){
   let query = supabase.from("clientes").select("*").order("nombre");
 
   if(term){
-    // búsquedas simples
     query = query.or(`nombre.ilike.%${term}%,telefono.ilike.%${term}%,email.ilike.%${term}%`);
   }
 
@@ -184,7 +183,6 @@ async function selectCliente(c){
   show(bloqueContratos);
   show(bloqueActividades);
 
-  // reset inputs defaults
   k_inicio.value = isoToday();
   k_fin.value = addDays(k_inicio.value, 365);
 
@@ -231,7 +229,7 @@ btnAddPunto.addEventListener("click", async () => {
 
   const { error } = await supabase.from("puntos_suministro").insert(payload);
   if(error){
-    puntoMsg.textContent = error.message; // si CUPS ya existe, salta aquí
+    puntoMsg.textContent = error.message;
     return;
   }
   p_cups.value=""; p_dir.value=""; p_pob.value="";
@@ -270,7 +268,6 @@ async function loadContratos(){
     contratosList.appendChild(d);
   });
 
-  // guardamos el último (vigente por recencia) para "Renovar"
   window.__lastContrato = data[0];
 }
 
@@ -305,87 +302,4 @@ btnAddContrato.addEventListener("click", async () => {
   await loadContratos();
 });
 
-btnRenovar.addEventListener("click", async () => {
-  contratoMsg.textContent = "";
-  if(!window.__lastContrato){
-    contratoMsg.textContent = "No hay contrato previo para copiar.";
-    return;
-  }
-  // Copiamos el último y lo creamos como nuevo con fechas nuevas
-  const hoy = isoToday();
-  const payload = {
-    punto_id: selectedPuntoId,
-    fecha_inicio: hoy,
-    fecha_fin: addDays(hoy, 365),
-    tarifa: window.__lastContrato.tarifa,
-    consumo_estimado: window.__lastContrato.consumo_estimado,
-    compania_anterior: window.__lastContrato.compania_actual,
-    compania_actual: window.__lastContrato.compania_actual,
-    estado: "FIRMADO",
-    cobrado: false
-  };
-
-  const { error } = await supabase.from("contratos").insert(payload);
-  if(error){
-    contratoMsg.textContent = error.message;
-    return;
-  }
-  await loadContratos();
-});
-
-// Actividades
-async function loadActividades(){
-  actividadesList.innerHTML = "";
-
-  const { data, error } = await supabase
-    .from("actividades")
-    .select("*")
-    .eq("cliente_id", selectedClienteId)
-    .order("fecha", { ascending: false });
-
-  if(error){
-    actividadesList.innerHTML = `<div class="muted">Error: ${error.message}</div>`;
-    return;
-  }
-
-  if(data.length === 0){
-    actividadesList.innerHTML = `<div class="muted">Sin actividades todavía.</div>`;
-    return;
-  }
-
-  data.forEach(a => {
-    const title = `${a.tipo} | ${new Date(a.fecha).toLocaleString()}`;
-    const subtitle = `${a.resultado ?? ""} ${a.proxima_accion ? "→ " + a.proxima_accion : ""}`;
-    const d = itemDiv(title, subtitle);
-    actividadesList.appendChild(d);
-  });
-}
-
-btnAddActividad.addEventListener("click", async () => {
-  actividadMsg.textContent = "";
-  if(!selectedClienteId){
-    actividadMsg.textContent = "Selecciona un cliente primero.";
-    return;
-  }
-  const payload = {
-    cliente_id: selectedClienteId,
-    contrato_id: window.__lastContrato?.id ?? null,
-    tipo: a_tipo.value,
-    resultado: a_resultado.value.trim() || null,
-    proxima_accion: a_proxima.value.trim() || null,
-    fecha_proxima: a_fecha_prox.value || null,
-    notas: a_notas.value.trim() || null
-  };
-
-  const { error } = await supabase.from("actividades").insert(payload);
-  if(error){
-    actividadMsg.textContent = error.message;
-    return;
-  }
-
-  a_resultado.value=""; a_proxima.value=""; a_fecha_prox.value=""; a_notas.value="";
-  await loadActividades();
-});
-
-// Init
-refreshSessionUI();
+btnRenovar.addEventListen
