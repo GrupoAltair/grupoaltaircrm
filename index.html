@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>CRM Energía</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <header>
+    <h1>CRM Energía</h1>
+    <button id="btnLogout" class="hidden">Cerrar sesión</button>
+  </header>
+
+  <main>
+    <!-- LOGIN -->
+    <section id="loginBox">
+      <h2>Acceso</h2>
+      <label>Email</label>
+      <input id="email" type="email" placeholder="tu@email.com"/>
+      <label>Contraseña</label>
+      <input id="password" type="password" placeholder="••••••••"/>
+      <button id="btnLogin">Entrar</button>
+      <p id="loginMsg" class="msg"></p>
+    </section>
+
+    <!-- APP -->
+    <section id="appBox" class="hidden">
+      <div class="grid">
+        <div class="card">
+          <h2>Clientes</h2>
+          <div class="row">
+            <input id="q" placeholder="Buscar por nombre / teléfono / email"/>
+            <button id="btnRefresh">Actualizar</button>
+          </div>
+          <div id="clientesList" class="list"></div>
+
+          <h3>Nuevo cliente</h3>
+          <div class="form">
+            <input id="c_nombre" placeholder="Nombre *"/>
+            <input id="c_tel" placeholder="Teléfono"/>
+            <input id="c_email" placeholder="Email"/>
+            <input id="c_pob" placeholder="Población"/>
+            <button id="btnAddCliente">Crear cliente</button>
+            <p id="clienteMsg" class="msg"></p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Ficha</h2>
+          <div id="ficha" class="muted">Selecciona un cliente.</div>
+          <hr/>
+
+          <div id="bloquePuntos" class="hidden">
+            <h3>Puntos de suministro</h3>
+            <div id="puntosList" class="list"></div>
+
+            <h4>Nuevo punto</h4>
+            <div class="form">
+              <input id="p_cups" placeholder="CUPS *"/>
+              <input id="p_dir" placeholder="Dirección"/>
+              <input id="p_pob" placeholder="Población"/>
+              <button id="btnAddPunto">Crear punto</button>
+              <p id="puntoMsg" class="msg"></p>
+            </div>
+          </div>
+
+          <hr/>
+          <div id="bloqueContratos" class="hidden">
+            <h3>Contratos (histórico)</h3>
+            <div id="contratosList" class="list"></div>
+
+            <h4>Nuevo contrato (para el punto seleccionado)</h4>
+            <div class="form">
+              <input id="k_inicio" type="date"/>
+              <input id="k_fin" type="date"/>
+              <input id="k_tarifa" placeholder="Tarifa"/>
+              <input id="k_comp" placeholder="Compañía actual"/>
+              <select id="k_estado">
+                <option>FIRMADO</option>
+                <option>PENDIENTE</option>
+                <option>RECHAZADO</option>
+                <option>FINALIZADO</option>
+              </select>
+              <label class="inline">
+                <input id="k_cobrado" type="checkbox"/> Cobrado
+              </label>
+              <input id="k_factura" placeholder="Nº factura"/>
+              <button id="btnAddContrato">Crear contrato</button>
+              <button id="btnRenovar" class="secondary">Renovar (copia último)</button>
+              <p id="contratoMsg" class="msg"></p>
+            </div>
+          </div>
+
+          <hr/>
+          <div id="bloqueActividades" class="hidden">
+            <h3>Actividades</h3>
+            <div id="actividadesList" class="list"></div>
+
+            <h4>Nueva actividad</h4>
+            <div class="form">
+              <select id="a_tipo">
+                <option>llamada</option>
+                <option>email</option>
+                <option>estudio</option>
+                <option>incidencia</option>
+                <option>reclamacion</option>
+                <option>renovacion</option>
+              </select>
+              <input id="a_resultado" placeholder="Resultado"/>
+              <input id="a_proxima" placeholder="Próxima acción"/>
+              <input id="a_fecha_prox" type="date"/>
+              <textarea id="a_notas" placeholder="Notas"></textarea>
+              <button id="btnAddActividad">Crear actividad</button>
+              <p id="actividadMsg" class="msg"></p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
